@@ -18,7 +18,7 @@ matrix:
 install:
   - if [[ $DJANGO ]]; then
         if [[ $DJANGO != 1.10* ]]; then
-            pip install "django>=$DJANGO,<=$DJANGO.99";
+            pip install "django>=$DJANGO,<=$DJANGO.9";
         fi;
         pip install mock sh
         pip install -e .;
