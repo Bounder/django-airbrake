@@ -189,7 +189,7 @@ class XMLDataTest(TestCase):
 
     def test_raises_404(self, urlopen):
         urlopen.return_value.getcode.return_value = 200
-        
+
         response = self.client.get('/raises/404/')
         self.assertEqual(response.status_code, 404)  # Check 404 is actually thrown
         self.assertEqual(urlopen.call_count, 1)
