@@ -25,6 +25,11 @@ matrix:
     - python: "3.4"
       env: FLAKE8=YES
 
+
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libxml2-utils
+
 install:
   - if [[ $DJANGO ]]; then
         pip install "django>=$DJANGO,<=$DJANGO.99";
