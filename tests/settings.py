@@ -44,12 +44,14 @@ LOGGING = {
         }
     },
     'loggers': {
-        '': {
+        'test': {
             'handlers': ['airbrake'],
-            'level': 'WARNING',
+            'level': 'WARNING'
         },
         'django.request': {
+            'handlers': ['airbrake'],
             'propagate': True,
+            'level': 'WARNING'
         },
     }
 }

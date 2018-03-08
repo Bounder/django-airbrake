@@ -13,7 +13,7 @@ setup(
     description='Airbrake exception logger for Django',
     license='MIT',
     long_description=open('README.rst').read(),
-    install_requires=['Django>=1.8,<1.9.9'],
+    install_requires=['Django>=1.8,<=1.11.11'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
