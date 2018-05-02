@@ -6,6 +6,7 @@ try:
 except ImportError:
     from mock import patch
 
+import django
 from django.conf import settings
 from django.contrib.sessions.backends.db import SessionStore
 from django.test import TestCase
@@ -52,6 +53,57 @@ DJANGO_RESPONSE = """
                     <line file="*"
                           method="*"
                           number="*" />
+                    <line file="*"
+                          method="*"
+                          number="*" />
+                    <line file="*"
+                          method="*"
+                          number="*" />
+                    <line file="*"
+                          method="*"
+                          number="*" />
+                    <line file="*"
+                          method="raises_view_exception: raise ViewException('Could not find my Django')"
+                          number="*" />
+                </backtrace>
+            </error>
+        </notice>
+        """
+
+
+DJANGO20_RESPONSE = """
+        <notice version="2.0">
+            <api-key>MY_API_KEY</api-key>
+            <notifier>
+                <name>django-airbrake</name>
+                <version>%(version)s</version>
+                <url>http://github.com/Bouke/django-airbrake</url>
+            </notifier>
+            <server-environment>
+                <environment-name>test</environment-name>
+            </server-environment>
+            <request>
+                <url>http://testserver/raises/view-exception/?foo=bar</url>
+                <component>tests.urls.raises_view_exception</component>
+                <action>POST</action>
+                <params>
+                    <var key='foo2'>bar2</var>
+                </params>
+                <session>
+                    <var key='user'>foobunny</var>
+                </session>
+                <cgi-data>
+                    <var key='HTTP_COOKIE'>sessionid=%(session)s</var>
+                    <var key='DJANGO_SETTINGS_MODULE'>tests.settings</var>
+                    <var key='HTTP_USER_AGENT'>Python/3.3</var>
+                    <var key='SERVER_NAME'>testserver</var>
+                    <var key='REMOTE_ADDR'>127.0.0.1</var>
+                </cgi-data>
+            </request>
+            <error>
+                <class>ViewException</class>
+                <message>Internal Server Error: /raises/view-exception/: Could not find my Django</message>
+                <backtrace>
                     <line file="*"
                           method="*"
                           number="*" />
@@ -130,10 +182,16 @@ class XMLDataTest(TestCase):
         xsd_validate(xml)
 
         # @todo cgi-data has undefined ordering, need to adjust xml validation
-        self.assertTrue(xml_compare(etree.fromstring(
-            DJANGO_RESPONSE % {'version': airbrake.__version__, 'session': session.session_key}),
-            etree.fromstring(xml),
-            self.fail))
+        if django.VERSION > (1, 11):
+            self.assertTrue(xml_compare(etree.fromstring(
+                    DJANGO20_RESPONSE % {'version': airbrake.__version__, 'session': session.session_key}),
+                    etree.fromstring(xml),
+                    self.fail))
+        else:
+            self.assertTrue(xml_compare(etree.fromstring(
+                DJANGO_RESPONSE % {'version': airbrake.__version__, 'session': session.session_key}),
+                etree.fromstring(xml),
+                self.fail))
 
     def test_raises_404(self, urlopen):
         urlopen.return_value.getcode.return_value = 200
