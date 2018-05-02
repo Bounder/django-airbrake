@@ -1,30 +1,22 @@
 language: python
 
-python:
-  - 2.7
-  - 3.4
-  - 3.5
-  - 3.6
-
 matrix:
   include:
     - python: "2.7"
-      env: DJANGO=1.8 COVERAGE=YES
-    - python: "3.5"
-      env: DJANGO=1.8
-    - python: "3.6"
-      env: DJANGO=1.8
-
-    - python: "2.7"
-      env: DJANGO=1.11
-    - python: "3.5"
-      env: DJANGO=1.11
-    - python: "3.6"
       env: DJANGO=1.11 COVERAGE=YES
+    - python: "3.4"
+      env: DJANGO=1.11
+    - python: "3.5"
+      env: DJANGO=1.11
+    - python: "3.6"
+      env: DJANGO=1.11 
 
     - python: "3.4"
-      env: FLAKE8=YES
-
+      env: DJANGO=2.0 
+    - python: "3.5"
+      env: DJANGO=2.0
+    - python: "3.6"
+      env: DJANGO=2.0 COVERAGE=YES FLAKE8=YES
 
 before_install:
   - sudo apt-get -qq update
