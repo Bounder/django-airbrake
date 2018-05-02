@@ -155,7 +155,7 @@ class XMLDataTest(TestCase):
 
 
 @patch('airbrake.handlers.urlopen', autospec=True)
-@override_settings(INSTALLED_APPS=['tests'], MIDDLEWARE_CLASSES=())
+@override_settings(INSTALLED_APPS=['tests'], MIDDLEWARE=())
 class NoSessionTest(TestCase):
     def test_raises_viewexception(self, urlopen):
         urlopen.return_value.getcode.return_value = 200
