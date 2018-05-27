@@ -68,7 +68,7 @@ DJANGO_RESPONSE = """
                 </backtrace>
             </error>
         </notice>
-        """
+        """  # noqa: E501
 
 
 DJANGO20_RESPONSE = """
@@ -119,7 +119,7 @@ DJANGO20_RESPONSE = """
                 </backtrace>
             </error>
         </notice>
-        """
+        """  # noqa: E501
 
 
 @patch('airbrake.handlers.urlopen', autospec=True)
@@ -159,7 +159,7 @@ class XMLDataTest(TestCase):
                 </backtrace>
             </error>
         </notice>
-        """ % {'version': airbrake.__version__}),
+        """ % {'version': airbrake.__version__}),  # noqa: E501
             etree.fromstring(xml),
             self.fail))
 
@@ -183,15 +183,33 @@ class XMLDataTest(TestCase):
 
         # @todo cgi-data has undefined ordering, need to adjust xml validation
         if django.VERSION > (1, 11):
-            self.assertTrue(xml_compare(etree.fromstring(
-                    DJANGO20_RESPONSE % {'version': airbrake.__version__, 'session': session.session_key}),
+            self.assertTrue(
+                xml_compare(
+                    etree.fromstring(
+                        DJANGO20_RESPONSE
+                        % {
+                            "version": airbrake.__version__,
+                            "session": session.session_key,
+                        }
+                    ),
                     etree.fromstring(xml),
-                    self.fail))
+                    self.fail,
+                )
+            )
         else:
-            self.assertTrue(xml_compare(etree.fromstring(
-                DJANGO_RESPONSE % {'version': airbrake.__version__, 'session': session.session_key}),
-                etree.fromstring(xml),
-                self.fail))
+            self.assertTrue(
+                xml_compare(
+                    etree.fromstring(
+                        DJANGO_RESPONSE
+                        % {
+                            "version": airbrake.__version__,
+                            "session": session.session_key,
+                        }
+                    ),
+                    etree.fromstring(xml),
+                    self.fail,
+                )
+            )
 
     def test_raises_404(self, urlopen):
         urlopen.return_value.getcode.return_value = 200
